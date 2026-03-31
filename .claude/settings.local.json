@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --no-turbopack)",
+      "Bash(npm -v)",
+      "Read(//c/Program Files/**)",
+      "Read(//c/Users/미아/AppData/Roaming/**)",
+      "Read(//c/Users/미아/AppData/Local/**)",
+      "Bash(cmd.exe /c \"where node\")",
+      "Read(//c//**)",
+      "Bash(cmd.exe /c \"where node 2>&1\")",
+      "Bash(cmd.exe /c \"node -v 2>&1\")",
+      "Bash(winget list:*)",
+      "Bash(powershell.exe -Command \"winget list | Select-String -Pattern ''node''\")",
+      "Bash(powershell.exe -Command \"winget install OpenJS.NodeJS.LTS --accept-source-agreements --accept-package-agreements\")",
+      "Bash(export PATH=\"/c/Program Files/nodejs:$PATH\")",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --no-turbopack --yes)",
+      "Bash(npm install:*)",
+      "Bash(npx shadcn@latest init -d --yes)",
+      "Bash(npx shadcn@latest add input dialog sheet select skeleton toast badge separator dropdown-menu table tabs card textarea label avatar checkbox radio-group popover command scroll-area switch tooltip form --yes)",
+      "Bash(npx shadcn@latest add input dialog sheet select skeleton sonner badge separator dropdown-menu table tabs card textarea label avatar checkbox radio-group popover command scroll-area switch tooltip form --yes)",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git config:*)"
+    ]
+  }
+}
