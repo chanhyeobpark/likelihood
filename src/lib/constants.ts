@@ -45,3 +45,23 @@ export const SORT_OPTIONS = [
   { value: 'price_desc', labelKo: '높은 가격순', labelEn: 'Price: High to Low' },
   { value: 'popular', labelKo: '인기순', labelEn: 'Popular' },
 ] as const
+
+export const CUSTOM_ORDER_STATUS_MAP = {
+  PENDING: { ko: '접수대기', en: 'Pending' },
+  REVIEWING: { ko: '검토중', en: 'Reviewing' },
+  QUOTED: { ko: '견적완료', en: 'Quoted' },
+  ACCEPTED: { ko: '수락됨', en: 'Accepted' },
+  IN_PRODUCTION: { ko: '제작중', en: 'In Production' },
+  COMPLETED: { ko: '제작완료', en: 'Completed' },
+  CANCELLED: { ko: '취소됨', en: 'Cancelled' },
+} as const
+
+export const CUSTOM_ORDER_CATEGORIES = [
+  { value: 'pants', labelKo: '팬츠', labelEn: 'Pants' },
+  { value: 'jacket', labelKo: '재킷', labelEn: 'Jacket' },
+  { value: 'shirt', labelKo: '셔츠', labelEn: 'Shirt' },
+  { value: 'coat', labelKo: '코트', labelEn: 'Coat' },
+  { value: 'dress', labelKo: '원피스', labelEn: 'Dress' },
+  { value: 'knit', labelKo: '니트', labelEn: 'Knit' },
+  { value: 'other', labelKo: '기타', labelEn: 'Other' },
+] as const

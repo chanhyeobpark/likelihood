@@ -43,10 +43,10 @@ function LoginForm() {
     router.refresh();
   };
 
-  const handleSocialLogin = async (provider: "kakao" | "google") => {
+  const handleSocialLogin = async (provider: "kakao" | "google" | "naver") => {
     const supabase = createClient();
     await supabase.auth.signInWithOAuth({
-      provider,
+      provider: provider as any,
       options: {
         redirectTo: `${window.location.origin}/callback?redirect=${redirect}`,
       },
@@ -124,6 +124,13 @@ function LoginForm() {
           className="w-full rounded-none h-11 text-sm bg-[#FEE500] border-[#FEE500] text-[#191919] hover:bg-[#FDD800] hover:border-[#FDD800]"
         >
           카카오로 로그인
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => handleSocialLogin("naver")}
+          className="w-full rounded-none h-11 text-sm bg-[#03C75A] border-[#03C75A] text-white hover:bg-[#02b351] hover:border-[#02b351]"
+        >
+          네이버로 로그인
         </Button>
         <Button
           variant="outline"

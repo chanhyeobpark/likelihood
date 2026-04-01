@@ -698,6 +698,61 @@ export type Database = {
         }
         Relationships: []
       }
+      custom_orders: {
+        Row: {
+          id: string
+          user_id: string
+          title: string
+          description: string
+          category: 'pants' | 'jacket' | 'shirt' | 'coat' | 'dress' | 'knit' | 'other'
+          quantity: number
+          budget_min: number | null
+          budget_max: number | null
+          desired_date: string | null
+          reference_images: string[] | null
+          size_info: string | null
+          status: 'PENDING' | 'REVIEWING' | 'QUOTED' | 'ACCEPTED' | 'IN_PRODUCTION' | 'COMPLETED' | 'CANCELLED'
+          admin_reply: string | null
+          quoted_price: number | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          title: string
+          description: string
+          category: 'pants' | 'jacket' | 'shirt' | 'coat' | 'dress' | 'knit' | 'other'
+          quantity?: number
+          budget_min?: number | null
+          budget_max?: number | null
+          desired_date?: string | null
+          reference_images?: string[] | null
+          size_info?: string | null
+          status?: 'PENDING' | 'REVIEWING' | 'QUOTED' | 'ACCEPTED' | 'IN_PRODUCTION' | 'COMPLETED' | 'CANCELLED'
+          admin_reply?: string | null
+          quoted_price?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          user_id?: string
+          title?: string
+          description?: string
+          category?: 'pants' | 'jacket' | 'shirt' | 'coat' | 'dress' | 'knit' | 'other'
+          quantity?: number
+          budget_min?: number | null
+          budget_max?: number | null
+          desired_date?: string | null
+          reference_images?: string[] | null
+          size_info?: string | null
+          status?: 'PENDING' | 'REVIEWING' | 'QUOTED' | 'ACCEPTED' | 'IN_PRODUCTION' | 'COMPLETED' | 'CANCELLED'
+          admin_reply?: string | null
+          quoted_price?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -737,6 +792,7 @@ export type Review = Tables<'reviews'>
 export type Wishlist = Tables<'wishlists'>
 export type PointsTransaction = Tables<'points_transactions'>
 export type InventoryLog = Tables<'inventory_logs'>
+export type CustomOrder = Tables<'custom_orders'>
 
 // Extended types with relations
 export type ProductWithDetails = Product & {

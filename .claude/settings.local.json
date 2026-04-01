@@ -23,7 +23,16 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git config:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000)",
+      "Bash(taskkill //F //IM node.exe)",
+      "WebFetch(domain:likelihood.co.kr)",
+      "WebSearch",
+      "WebFetch(domain:www.icecubedigital.com)",
+      "WebFetch(domain:gempages.net)",
+      "WebFetch(domain:breakingac.com)",
+      "WebFetch(domain:www.digitalsilk.com)"
     ]
   }
 }

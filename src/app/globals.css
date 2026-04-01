@@ -135,3 +135,16 @@
     @apply mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-12;
   }
 }
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee linear infinite;
+}
+
+html {
+  scroll-behavior: smooth;
+}
