@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { LayoutDashboard, Package, ShoppingCart, Warehouse, Users, Tag, Paintbrush, BarChart3, Settings } from "lucide-react";
 
 const ADMIN_NAV = [
@@ -14,6 +17,8 @@ const ADMIN_NAV = [
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white border-b h-14 flex items-center px-6 sticky top-0 z-50">
@@ -31,7 +36,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-600 hover:text-black hover:bg-gray-50 rounded-md transition-colors"
+                className={`flex items-center gap-3 px-3 py-2.5 text-sm rounded-md transition-colors ${
+                  pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href + "/"))
+                    ? "bg-gray-100 text-black font-medium"
+                    : "text-gray-600 hover:text-black hover:bg-gray-50"
+                }`}
               >
                 <item.icon className="h-4 w-4" />
                 {item.label}

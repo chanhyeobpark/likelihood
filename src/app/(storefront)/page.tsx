@@ -3,8 +3,18 @@ import { Button } from "@/components/ui/button";
 import { AnimateOnScroll, StaggerContainer, StaggerItem } from "@/components/shared/animate-on-scroll";
 import { Marquee } from "@/components/shared/marquee";
 import { HeroSection } from "./hero-section";
+import { createClient } from "@/lib/supabase/server";
+import { ProductCard } from "@/components/product/product-card";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const supabase = await createClient();
+  const { data: featuredProducts } = await supabase
+    .from("products")
+    .select("slug, name_ko, name_en, base_price, compare_at_price, is_new, images:product_images(url, is_primary), variants:product_variants(stock_quantity)")
+    .eq("is_active", true)
+    .order("is_featured", { ascending: false })
+    .order("created_at", { ascending: false })
+    .limit(8);
   return (
     <div>
       {/* Hero */}
@@ -81,23 +91,23 @@ export default function HomePage() {
           </div>
         </AnimateOnScroll>
         <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <StaggerItem key={i}>
-              <Link href={`/products/sample-${i + 1}`} className="group block">
-                <div className="aspect-[3/4] bg-gray-50 mb-3 overflow-hidden relative">
-                  <div className="w-full h-full bg-gradient-to-b from-gray-100 to-gray-200 group-hover:scale-110 transition-transform duration-700" />
-                  {/* Quick view overlay */}
-                  <div className="absolute inset-x-0 bottom-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <div className="bg-white/90 backdrop-blur-sm text-center py-2 text-xs tracking-wider uppercase">
-                      Quick View
-                    </div>
-                  </div>
-                </div>
-                <h3 className="text-sm group-hover:opacity-70 transition-opacity">Sample Product {i + 1}</h3>
-                <p className="text-sm text-gray-500 mt-1">59,000원</p>
-              </Link>
-            </StaggerItem>
-          ))}
+          {(featuredProducts && featuredProducts.length > 0 ? featuredProducts : Array.from({ length: 8 }, (_, i) => ({ slug: `sample-${i+1}`, name_ko: `Sample Product ${i+1}`, name_en: "", base_price: 59000, compare_at_price: null, is_new: false, images: [], variants: [] }))).map((product: any, i: number) => {
+            const primaryImage = product.images?.find((img: any) => img.is_primary) || product.images?.[0];
+            return (
+              <StaggerItem key={product.slug || i}>
+                <ProductCard
+                  slug={product.slug}
+                  nameKo={product.name_ko}
+                  nameEn={product.name_en || ""}
+                  price={product.base_price}
+                  compareAtPrice={product.compare_at_price}
+                  imageUrl={primaryImage?.url}
+                  isNew={product.is_new}
+                  isSoldOut={(product.variants?.reduce((s: number, v: any) => s + v.stock_quantity, 0) || 0) === 0}
+                />
+              </StaggerItem>
+            );
+          })}
         </StaggerContainer>
         <AnimateOnScroll delay={0.3}>
           <div className="text-center mt-12">

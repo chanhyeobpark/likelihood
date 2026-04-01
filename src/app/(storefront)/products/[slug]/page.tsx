@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ProductGallery } from "@/components/product/product-gallery";
@@ -53,11 +54,13 @@ export default async function ProductDetailPage({ params }: Props) {
   return (
     <div className="container-wide py-8">
       {/* Breadcrumb */}
-      <nav className="text-xs text-gray-400 mb-8">
-        <span>홈</span>
-        <span className="mx-2">/</span>
-        <span>{(product.category as any)?.name_ko}</span>
-        <span className="mx-2">/</span>
+      <nav className="text-xs text-gray-400 mb-8 flex items-center gap-2">
+        <Link href="/" className="hover:text-black transition-colors">홈</Link>
+        <span>/</span>
+        <Link href={`/categories/${(product.category as any)?.slug}`} className="hover:text-black transition-colors">
+          {(product.category as any)?.name_ko}
+        </Link>
+        <span>/</span>
         <span className="text-black">{product.name_ko}</span>
       </nav>
 

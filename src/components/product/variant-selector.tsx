@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/format";
 
@@ -55,7 +55,7 @@ export function VariantSelector({ variants, basePrice, onSelect }: VariantSelect
   };
 
   // Notify parent
-  useMemo(() => {
+  useEffect(() => {
     onSelect(selectedVariant);
   }, [selectedVariant, onSelect]);
 

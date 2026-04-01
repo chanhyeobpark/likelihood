@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { ShoppingBag, Heart } from "lucide-react";
+import { formatPrice } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { VariantSelector } from "@/components/product/variant-selector";
 import { useCartStore } from "@/stores/cart-store";
@@ -131,6 +132,18 @@ export function ProductDetailClient({
           className="h-12 w-12 rounded-none border-gray-200"
         >
           <Heart className="h-5 w-5" />
+        </Button>
+      </div>
+
+      {/* Mobile sticky CTA */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4 md:hidden z-40">
+        <Button
+          onClick={handleAddToCart}
+          disabled={!selectedVariant || selectedVariant.stock_quantity === 0}
+          className="w-full bg-black text-white hover:bg-gray-900 rounded-none h-12 text-sm tracking-wider uppercase disabled:opacity-40"
+        >
+          <ShoppingBag className="h-4 w-4 mr-2" />
+          {selectedVariant?.stock_quantity === 0 ? "품절" : selectedVariant ? `장바구니 담기 · ${formatPrice(selectedVariant.price_override ?? basePrice)}` : "옵션을 선택해주세요"}
         </Button>
       </div>
     </div>

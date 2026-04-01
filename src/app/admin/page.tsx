@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatPrice } from "@/lib/format";
+import { ORDER_STATUS_MAP } from "@/lib/constants";
 import { Package, ShoppingCart, Users, DollarSign } from "lucide-react";
 
 export const metadata = { title: "관리자 대시보드" };
@@ -43,43 +45,51 @@ export default async function AdminDashboard() {
     <div>
       <h1 className="text-2xl font-light tracking-wider mb-8">대시보드</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs font-medium text-gray-500">오늘 매출</CardTitle>
-            <DollarSign className="h-4 w-4 text-gray-400" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-light">{formatPrice(todayRevenue)}</p>
-            <p className="text-xs text-gray-400 mt-1">{ordersToday.count || 0}건</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs font-medium text-gray-500">처리 대기</CardTitle>
-            <ShoppingCart className="h-4 w-4 text-gray-400" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-light">{pendingCount || 0}건</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs font-medium text-gray-500">총 회원</CardTitle>
-            <Users className="h-4 w-4 text-gray-400" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-light">{totalMembers.count || 0}명</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-xs font-medium text-gray-500">활성 상품</CardTitle>
-            <Package className="h-4 w-4 text-gray-400" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-light">{activeProducts.count || 0}개</p>
-          </CardContent>
-        </Card>
+        <Link href="/admin/orders">
+          <Card className="hover:shadow-md transition-shadow cursor-pointer">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-xs font-medium text-gray-500">오늘 매출</CardTitle>
+              <DollarSign className="h-4 w-4 text-gray-400" />
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-light">{formatPrice(todayRevenue)}</p>
+              <p className="text-xs text-gray-400 mt-1">{ordersToday.count || 0}건</p>
+            </CardContent>
+          </Card>
+        </Link>
+        <Link href="/admin/orders">
+          <Card className="hover:shadow-md transition-shadow cursor-pointer">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-xs font-medium text-gray-500">처리 대기</CardTitle>
+              <ShoppingCart className="h-4 w-4 text-gray-400" />
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-light">{pendingCount || 0}건</p>
+            </CardContent>
+          </Card>
+        </Link>
+        <Link href="/admin/members">
+          <Card className="hover:shadow-md transition-shadow cursor-pointer">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-xs font-medium text-gray-500">총 회원</CardTitle>
+              <Users className="h-4 w-4 text-gray-400" />
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-light">{totalMembers.count || 0}명</p>
+            </CardContent>
+          </Card>
+        </Link>
+        <Link href="/admin/products">
+          <Card className="hover:shadow-md transition-shadow cursor-pointer">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-xs font-medium text-gray-500">활성 상품</CardTitle>
+              <Package className="h-4 w-4 text-gray-400" />
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-light">{activeProducts.count || 0}개</p>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -96,7 +106,7 @@ export default async function AdminDashboard() {
                     </div>
                     <div className="text-right">
                       <p>{formatPrice(order.total)}</p>
-                      <p className="text-xs text-gray-400">{order.status}</p>
+                      <p className="text-xs text-gray-400">{ORDER_STATUS_MAP[order.status as keyof typeof ORDER_STATUS_MAP]?.ko || order.status}</p>
                     </div>
                   </div>
                 ))}

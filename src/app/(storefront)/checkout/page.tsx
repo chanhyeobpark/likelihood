@@ -12,7 +12,9 @@ import { useCartStore, type CartItem } from "@/stores/cart-store";
 import { formatPrice } from "@/lib/format";
 import { FREE_SHIPPING_THRESHOLD, DEFAULT_SHIPPING_FEE, SHIPPING_MEMOS } from "@/lib/constants";
 import { createClient } from "@/lib/supabase/client";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
+import Script from "next/script";
 
 export default function CheckoutPage() {
   const items = useCartStore((s) => s.items);
@@ -25,6 +27,7 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState("TOSS");
   const [shippingMemo, setShippingMemo] = useState("");
   const [customMemo, setCustomMemo] = useState("");
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [couponCode, setCouponCode] = useState("");
 
   const [form, setForm] = useState({
@@ -109,6 +112,10 @@ export default function CheckoutPage() {
       toast.error("배송 정보를 모두 입력해주세요");
       return;
     }
+    if (!agreedToTerms) {
+      toast.error("주문 약관에 동의해주세요");
+      return;
+    }
     setLoading(true);
 
     try {
@@ -168,7 +175,7 @@ export default function CheckoutPage() {
   return (
     <>
       {/* Daum Postcode Script */}
-      <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" async />
+      <Script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" strategy="lazyOnload" />
 
       <div className="container-wide py-12">
         <h1 className="text-2xl font-light tracking-wider mb-8">결제</h1>
@@ -285,17 +292,28 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
+                {/* Terms Agreement */}
+                <div className="space-y-3 mt-4">
+                  <div className="flex items-start gap-2">
+                    <Checkbox
+                      id="terms"
+                      checked={agreedToTerms}
+                      onCheckedChange={(checked) => setAgreedToTerms(checked === true)}
+                      className="mt-0.5"
+                    />
+                    <label htmlFor="terms" className="text-xs text-gray-500 leading-relaxed cursor-pointer">
+                      구매조건 확인 및 결제 진행에 동의합니다. (이용약관, 개인정보 수집·이용, 개인정보 제3자 제공 동의 포함)
+                    </label>
+                  </div>
+                </div>
+
                 <Button
                   type="submit"
-                  disabled={loading}
-                  className="w-full bg-black text-white hover:bg-gray-900 rounded-none h-12 text-sm tracking-wider uppercase mt-6"
+                  disabled={loading || !agreedToTerms}
+                  className="w-full bg-black text-white hover:bg-gray-900 rounded-none h-12 text-sm tracking-wider uppercase mt-4 disabled:opacity-40"
                 >
                   {loading ? "처리 중..." : `${formatPrice(total)} 결제하기`}
                 </Button>
-
-                <p className="text-[10px] text-gray-400 text-center mt-4 leading-relaxed">
-                  주문 시 이용약관 및 개인정보처리방침에 동의하게 됩니다.
-                </p>
               </div>
             </div>
           </div>

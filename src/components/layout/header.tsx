@@ -33,7 +33,7 @@ export function Header() {
     <>
       {/* Announcement Bar */}
       <div className="bg-black text-white text-center text-xs py-2 px-4 relative z-50">
-        <p>전 상품 무료배송 | FREE SHIPPING ON ALL ORDERS OVER ₩100,000</p>
+        <p>10만원 이상 구매 시 무료배송 | FREE SHIPPING ON ORDERS OVER ₩100,000</p>
       </div>
 
       <motion.header
