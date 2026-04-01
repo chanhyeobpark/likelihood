@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 import Stripe from "stripe";
 
 function getStripe() {
@@ -22,6 +23,18 @@ export async function POST(request: NextRequest) {
 
     if (!order) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
+    }
+
+    // Verify the order belongs to the requesting user or is a guest order
+    const supabaseAuth = await createClient();
+    const { data: { user } } = await supabaseAuth.auth.getUser();
+    if (order.user_id && (!user || order.user_id !== user.id)) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
+
+    // Check order status
+    if (order.status !== "PENDING_PAYMENT") {
+      return NextResponse.json({ error: "Order already processed" }, { status: 400 });
     }
 
     const paymentIntent = await stripe.paymentIntents.create({

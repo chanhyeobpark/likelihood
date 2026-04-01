@@ -23,7 +23,7 @@ export default async function HomePage() {
       {/* Marquee Banner */}
       <div className="py-4 border-y border-gray-100">
         <Marquee speed={25} className="text-xs tracking-[0.3em] uppercase text-gray-400">
-          <span>Free Shipping</span>
+          <span>10만원 이상 무료배송</span>
           <span className="text-gray-200">·</span>
           <span>New Arrivals</span>
           <span className="text-gray-200">·</span>
@@ -35,7 +35,7 @@ export default async function HomePage() {
           <span className="text-gray-200">·</span>
           <span>제작의뢰</span>
           <span className="text-gray-200">·</span>
-          <span>Free Shipping</span>
+          <span>10만원 이상 무료배송</span>
           <span className="text-gray-200">·</span>
           <span>New Arrivals</span>
           <span className="text-gray-200">·</span>
@@ -90,8 +90,9 @@ export default async function HomePage() {
             <p className="text-sm text-gray-400">이번 시즌 추천 아이템</p>
           </div>
         </AnimateOnScroll>
+        {featuredProducts && featuredProducts.length > 0 ? (
         <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          {(featuredProducts && featuredProducts.length > 0 ? featuredProducts : Array.from({ length: 8 }, (_, i) => ({ slug: `sample-${i+1}`, name_ko: `Sample Product ${i+1}`, name_en: "", base_price: 59000, compare_at_price: null, is_new: false, images: [], variants: [] }))).map((product: any, i: number) => {
+          {featuredProducts.map((product: any, i: number) => {
             const primaryImage = product.images?.find((img: any) => img.is_primary) || product.images?.[0];
             return (
               <StaggerItem key={product.slug || i}>
@@ -109,6 +110,11 @@ export default async function HomePage() {
             );
           })}
         </StaggerContainer>
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-sm text-gray-400">곧 새로운 상품이 등록됩니다</p>
+          </div>
+        )}
         <AnimateOnScroll delay={0.3}>
           <div className="text-center mt-12">
             <Link href="/products">

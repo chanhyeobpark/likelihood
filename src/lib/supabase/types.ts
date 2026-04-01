@@ -766,6 +766,14 @@ export type Database = {
         Args: Record<string, never>
         Returns: string
       }
+      decrement_stock: {
+        Args: { p_variant_id: string; p_quantity: number }
+        Returns: undefined
+      }
+      restore_stock: {
+        Args: { p_variant_id: string; p_quantity: number }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

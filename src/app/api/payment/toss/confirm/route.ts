@@ -18,6 +18,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "주문을 찾을 수 없습니다" }, { status: 404 });
     }
 
+    // Check order status before confirming payment
+    if (order.status !== 'PENDING_PAYMENT') {
+      return NextResponse.json({ error: "이미 처리된 주문입니다" }, { status: 400 });
+    }
+
     if (order.total !== amount) {
       return NextResponse.json({ error: "결제 금액이 일치하지 않습니다" }, { status: 400 });
     }
@@ -35,8 +40,22 @@ export async function POST(request: NextRequest) {
     const tossData = await tossResponse.json();
 
     if (!tossResponse.ok) {
-      // Restore stock on failure
-      return NextResponse.json({ error: tossData.message || "결제 확인에 실패했습니다" }, { status: 400 });
+      // Restore stock for all items in the order
+      const { data: orderItems } = await admin
+        .from("order_items")
+        .select("variant_id, quantity")
+        .eq("order_id", order.id);
+
+      if (orderItems) {
+        for (const item of orderItems) {
+          await admin.rpc("restore_stock", {
+            p_variant_id: item.variant_id,
+            p_quantity: item.quantity,
+          });
+        }
+      }
+      await admin.from("orders").update({ status: "CANCELLED" }).eq("id", order.id);
+      return NextResponse.json({ error: tossData.message || "결제 확인 실패" }, { status: 400 });
     }
 
     // Update order status

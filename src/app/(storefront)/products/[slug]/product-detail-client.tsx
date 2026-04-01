@@ -81,7 +81,7 @@ export function ProductDetailClient({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-20 md:pb-0">
       <VariantSelector
         variants={variants}
         basePrice={basePrice}
@@ -136,7 +136,7 @@ export function ProductDetailClient({
       </div>
 
       {/* Mobile sticky CTA */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4 md:hidden z-40">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4 pb-[max(1rem,env(safe-area-inset-bottom))] md:hidden z-40">
         <Button
           onClick={handleAddToCart}
           disabled={!selectedVariant || selectedVariant.stock_quantity === 0}

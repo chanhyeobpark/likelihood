@@ -38,7 +38,7 @@ export function HeroSection() {
             transition={{ delay: 0.3, duration: 0.8 }}
             className="text-xs tracking-[0.4em] uppercase mb-6 text-white/60"
           >
-            25 Spring / Summer
+            26 Spring / Summer
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 30 }}

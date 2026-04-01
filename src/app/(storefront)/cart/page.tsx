@@ -9,8 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { useCartStore, type CartItem } from "@/stores/cart-store";
 import { formatPrice } from "@/lib/format";
 import { FREE_SHIPPING_THRESHOLD, DEFAULT_SHIPPING_FEE } from "@/lib/constants";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
+
 
 export default function CartPage() {
   const cartItems = useCartStore((s) => s.items);

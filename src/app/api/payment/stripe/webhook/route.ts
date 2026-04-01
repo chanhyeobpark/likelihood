@@ -27,20 +27,39 @@ export async function POST(request: NextRequest) {
     const paymentIntent = event.data.object as Stripe.PaymentIntent;
     const orderId = paymentIntent.metadata.orderId;
 
+    // Idempotency: only process PENDING_PAYMENT orders
+    const { data: order } = await admin
+      .from("orders")
+      .select("status")
+      .eq("id", orderId)
+      .single();
+
+    if (!order || order.status !== "PENDING_PAYMENT") {
+      return NextResponse.json({ received: true }); // Already processed
+    }
+
     await admin
       .from("orders")
-      .update({
-        status: "PAID",
-        paid_at: new Date().toISOString(),
-      })
-      .eq("id", orderId);
+      .update({ status: "PAID", paid_at: new Date().toISOString() })
+      .eq("id", orderId)
+      .eq("status", "PENDING_PAYMENT"); // Double-check with WHERE clause
   }
 
   if (event.type === "payment_intent.payment_failed") {
     const paymentIntent = event.data.object as Stripe.PaymentIntent;
     const orderId = paymentIntent.metadata.orderId;
 
-    // Restore stock
+    const { data: order } = await admin
+      .from("orders")
+      .select("status")
+      .eq("id", orderId)
+      .single();
+
+    if (!order || order.status !== "PENDING_PAYMENT") {
+      return NextResponse.json({ received: true });
+    }
+
+    // Restore stock using atomic function
     const { data: orderItems } = await admin
       .from("order_items")
       .select("variant_id, quantity")
@@ -48,22 +67,18 @@ export async function POST(request: NextRequest) {
 
     if (orderItems) {
       for (const item of orderItems) {
-        const { data: variant } = await admin
-          .from("product_variants")
-          .select("stock_quantity")
-          .eq("id", item.variant_id)
-          .single();
-
-        if (variant) {
-          await admin
-            .from("product_variants")
-            .update({ stock_quantity: variant.stock_quantity + item.quantity })
-            .eq("id", item.variant_id);
-        }
+        await admin.rpc("restore_stock", {
+          p_variant_id: item.variant_id,
+          p_quantity: item.quantity,
+        });
       }
     }
 
-    await admin.from("orders").update({ status: "CANCELLED" }).eq("id", orderId);
+    await admin
+      .from("orders")
+      .update({ status: "CANCELLED" })
+      .eq("id", orderId)
+      .eq("status", "PENDING_PAYMENT");
   }
 
   return NextResponse.json({ received: true });

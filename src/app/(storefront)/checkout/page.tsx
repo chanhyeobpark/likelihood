@@ -188,7 +188,7 @@ export default function CheckoutPage() {
               <div>
                 <h2 className="text-xs font-medium tracking-wider uppercase mb-4">배송 정보</h2>
                 <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <Label className="text-xs">수령인</Label>
                       <Input value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} required className="mt-1 rounded-none h-11" />
@@ -277,7 +277,11 @@ export default function CheckoutPage() {
                   <Label className="text-xs">쿠폰 코드</Label>
                   <div className="flex gap-2 mt-1">
                     <Input value={couponCode} onChange={(e) => setCouponCode(e.target.value)} placeholder="쿠폰 코드 입력" className="rounded-none h-9 text-sm" />
-                    <Button type="button" variant="outline" size="sm" className="rounded-none text-xs h-9">
+                    <Button type="button" variant="outline" size="sm" className="rounded-none text-xs h-9"
+                      onClick={async () => {
+                        if (!couponCode.trim()) return;
+                        toast.info("쿠폰은 결제 시 서버에서 검증됩니다");
+                      }}>
                       적용
                     </Button>
                   </div>
@@ -302,7 +306,9 @@ export default function CheckoutPage() {
                       className="mt-0.5"
                     />
                     <label htmlFor="terms" className="text-xs text-gray-500 leading-relaxed cursor-pointer">
-                      구매조건 확인 및 결제 진행에 동의합니다. (이용약관, 개인정보 수집·이용, 개인정보 제3자 제공 동의 포함)
+                      구매조건 확인 및 결제 진행에 동의합니다. (
+                      <a href="/terms" target="_blank" className="underline">이용약관</a>,{" "}
+                      <a href="/privacy" target="_blank" className="underline">개인정보 수집·이용</a> 동의 포함)
                     </label>
                   </div>
                 </div>
