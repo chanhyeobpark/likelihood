@@ -40,6 +40,7 @@ export function RichTextEditor({
   placeholder = "내용을 입력하세요...",
 }: RichTextEditorProps) {
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit.configure({
         heading: { levels: [1, 2, 3] },
