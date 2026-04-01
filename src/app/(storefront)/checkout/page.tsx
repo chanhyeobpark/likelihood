@@ -112,6 +112,11 @@ export default function CheckoutPage() {
       toast.error("배송 정보를 모두 입력해주세요");
       return;
     }
+    const cleanPhone = form.phone.replace(/\D/g, '');
+    if (cleanPhone.length < 10 || cleanPhone.length > 11) {
+      toast.error("올바른 전화번호를 입력해주세요");
+      return;
+    }
     if (!agreedToTerms) {
       toast.error("주문 약관에 동의해주세요");
       return;
@@ -176,6 +181,7 @@ export default function CheckoutPage() {
     <>
       {/* Daum Postcode Script */}
       <Script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" strategy="lazyOnload" />
+      <Script src="https://js.tosspayments.com/v1/payment" strategy="lazyOnload" />
 
       <div className="container-wide py-12">
         <h1 className="text-2xl font-light tracking-wider mb-8">결제</h1>

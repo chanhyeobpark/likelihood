@@ -38,6 +38,8 @@ export async function updateSession(request: NextRequest) {
     request.nextUrl.pathname.startsWith('/orders') ||
     request.nextUrl.pathname.startsWith('/wishlist') ||
     request.nextUrl.pathname.startsWith('/points') ||
+    request.nextUrl.pathname.startsWith('/reviews') ||
+    request.nextUrl.pathname.startsWith('/custom-orders') ||
     request.nextUrl.pathname.startsWith('/settings')
 
   if (isAccountRoute && !user) {

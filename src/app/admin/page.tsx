@@ -4,17 +4,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatPrice } from "@/lib/format";
 import { ORDER_STATUS_MAP } from "@/lib/constants";
 import { Package, ShoppingCart, Users, DollarSign } from "lucide-react";
+import { AdminSalesChart } from "@/components/admin/sales-chart";
 
 export const metadata = { title: "관리자 대시보드" };
 
 export default async function AdminDashboard() {
   const supabase = await createClient();
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const todayISO = today.toISOString();
+  const now = new Date();
+  const kstOffset = 9 * 60 * 60 * 1000;
+  const kstNow = new Date(now.getTime() + kstOffset);
+  const todayKST = new Date(kstNow.getFullYear(), kstNow.getMonth(), kstNow.getDate());
+  const todayISO = new Date(todayKST.getTime() - kstOffset).toISOString();
 
   const [ordersToday, totalMembers, activeProducts] = await Promise.all([
-    supabase.from("orders").select("total", { count: "exact" }).gte("created_at", todayISO).neq("status", "CANCELLED"),
+    supabase.from("orders").select("total", { count: "exact" }).gte("created_at", todayISO).neq("status", "CANCELLED").neq("status", "REFUNDED"),
     supabase.from("profiles").select("id", { count: "exact" }),
     supabase.from("products").select("id", { count: "exact" }).eq("is_active", true),
   ]);
@@ -28,9 +31,9 @@ export default async function AdminDashboard() {
 
   const { data: lowStock } = await supabase
     .from("product_variants")
-    .select("id, sku, size, color_name_ko, stock_quantity, product:products(name_ko)")
+    .select("id, sku, size, color_name_ko, stock_quantity, product_id, product:products(name_ko)")
     .lte("stock_quantity", 5)
-    .gt("stock_quantity", 0)
+    .gte("stock_quantity", 0)
     .eq("is_active", true)
     .order("stock_quantity", { ascending: true })
     .limit(10);
@@ -92,6 +95,16 @@ export default async function AdminDashboard() {
         </Link>
       </div>
 
+      {/* Sales Chart */}
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle className="text-sm font-medium">최근 7일 매출</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <AdminSalesChart />
+        </CardContent>
+      </Card>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <Card>
           <CardHeader><CardTitle className="text-sm font-medium">최근 주문</CardTitle></CardHeader>
@@ -99,7 +112,7 @@ export default async function AdminDashboard() {
             {recentOrders && recentOrders.length > 0 ? (
               <div className="space-y-3">
                 {recentOrders.map((order) => (
-                  <div key={order.id} className="flex items-center justify-between text-sm">
+                  <Link key={order.id} href={`/admin/orders/${order.id}`} className="flex items-center justify-between text-sm hover:bg-gray-50 p-2 -mx-2 rounded">
                     <div>
                       <p className="font-mono text-xs">{order.order_number}</p>
                       <p className="text-xs text-gray-400">{order.shipping_name}</p>
@@ -108,7 +121,7 @@ export default async function AdminDashboard() {
                       <p>{formatPrice(order.total)}</p>
                       <p className="text-xs text-gray-400">{ORDER_STATUS_MAP[order.status as keyof typeof ORDER_STATUS_MAP]?.ko || order.status}</p>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             ) : (
@@ -122,7 +135,7 @@ export default async function AdminDashboard() {
             {lowStock && lowStock.length > 0 ? (
               <div className="space-y-3">
                 {lowStock.map((v) => (
-                  <div key={v.id} className="flex items-center justify-between text-sm">
+                  <Link key={v.id} href={`/admin/products/${v.product_id || ''}/edit`} className="flex items-center justify-between text-sm hover:bg-gray-50 p-2 -mx-2 rounded">
                     <div>
                       <p>{(v.product as any)?.name_ko}</p>
                       <p className="text-xs text-gray-400">{v.color_name_ko} / {v.size}</p>
@@ -130,7 +143,7 @@ export default async function AdminDashboard() {
                     <span className={`text-xs font-medium ${v.stock_quantity <= 2 ? "text-red-500" : "text-orange-500"}`}>
                       {v.stock_quantity}개 남음
                     </span>
-                  </div>
+                  </Link>
                 ))}
               </div>
             ) : (

@@ -774,6 +774,18 @@ export type Database = {
         Args: { p_variant_id: string; p_quantity: number }
         Returns: undefined
       }
+      increment_coupon_usage: {
+        Args: { p_coupon_id: string }
+        Returns: undefined
+      }
+      cleanup_pending_orders: {
+        Args: Record<string, never>
+        Returns: number
+      }
+      validate_variant_active: {
+        Args: { p_variant_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

@@ -43,6 +43,15 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: `상품을 찾을 수 없습니다` }, { status: 400 });
       }
 
+      // Check variant and product are active
+      const { data: isActive } = await admin.rpc("validate_variant_active", {
+        p_variant_id: item.variantId,
+      });
+
+      if (!isActive) {
+        return NextResponse.json({ error: "판매 중지된 상품이 포함되어 있습니다" }, { status: 400 });
+      }
+
       if (variant.stock_quantity < item.quantity) {
         return NextResponse.json(
           { error: `${(variant.product as any).name_ko} 재고가 부족합니다 (남은 수량: ${variant.stock_quantity})` },
@@ -174,18 +183,8 @@ export async function POST(request: NextRequest) {
         user_id: user.id,
         order_id: order.id,
       });
-      // Increment usage count
-      const { data: currentCoupon } = await admin
-        .from("coupons")
-        .select("usage_count")
-        .eq("id", couponId)
-        .single();
-      if (currentCoupon) {
-        await admin
-          .from("coupons")
-          .update({ usage_count: currentCoupon.usage_count + 1 })
-          .eq("id", couponId);
-      }
+      // Atomic increment usage count
+      await admin.rpc("increment_coupon_usage", { p_coupon_id: couponId });
     }
 
     // Atomic stock decrement (prevents overselling via race condition)

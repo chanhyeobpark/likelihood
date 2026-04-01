@@ -54,10 +54,11 @@ export function Footer() {
 
         {/* Business Info (Korean law requirement) */}
         <div className="text-xs text-gray-400 space-y-1">
-          <p>상호: likelihood | 대표: [대표자명] | 사업자등록번호: [000-00-00000]</p>
-          <p>통신판매업 신고번호: [제0000-서울00-0000호]</p>
-          <p>주소: [사업장 주소]</p>
-          <p>고객센터: [전화번호] | 이메일: contact@likelihood.co.kr</p>
+          <p className="font-medium text-gray-500 mb-2">사업자 정보</p>
+          <p>상호: likelihood | 대표: (설정 필요)</p>
+          <p>사업자등록번호: (설정 필요) | 통신판매업 신고번호: (설정 필요)</p>
+          <p>주소: (설정 필요)</p>
+          <p>고객센터: (설정 필요) | 이메일: contact@likelihood.co.kr</p>
           <p className="mt-4">&copy; {new Date().getFullYear()} likelihood. All rights reserved.</p>
         </div>
       </div>

@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { formatPrice } from "@/lib/format";
 import { Badge } from "@/components/ui/badge";
-import { motion } from "framer-motion";
+
 
 interface ProductCardProps {
   slug: string;
