@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LayoutDashboard, Package, ShoppingCart, Warehouse, Users, Tag, BarChart3, Settings } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, Warehouse, Users, Tag, Paintbrush, BarChart3, Settings } from "lucide-react";
 
 const ADMIN_NAV = [
   { href: "/admin", label: "대시보드", icon: LayoutDashboard },
@@ -8,6 +8,7 @@ const ADMIN_NAV = [
   { href: "/admin/inventory", label: "재고관리", icon: Warehouse },
   { href: "/admin/members", label: "회원관리", icon: Users },
   { href: "/admin/promotions", label: "프로모션", icon: Tag },
+  { href: "/admin/custom-orders", label: "제작의뢰", icon: Paintbrush },
   { href: "/admin/analytics", label: "분석", icon: BarChart3 },
   { href: "/admin/settings", label: "설정", icon: Settings },
 ];

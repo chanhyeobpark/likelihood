@@ -2,7 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus } from "lucide-react";
+import { Plus, FileSpreadsheet } from "lucide-react";
 import { formatPrice } from "@/lib/format";
 
 export const metadata = { title: "상품관리" };
@@ -18,11 +18,18 @@ export default async function AdminProductsPage() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-light tracking-wider">상품관리</h1>
-        <Link href="/admin/products/new">
-          <Button className="bg-black text-white hover:bg-gray-900 rounded-md h-9 text-sm">
-            <Plus className="h-4 w-4 mr-2" /> 상품 등록
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link href="/admin/products/bulk">
+            <Button variant="outline" className="rounded-md h-9 text-sm">
+              <FileSpreadsheet className="h-4 w-4 mr-2" /> 대량 등록
+            </Button>
+          </Link>
+          <Link href="/admin/products/new">
+            <Button className="bg-black text-white hover:bg-gray-900 rounded-md h-9 text-sm">
+              <Plus className="h-4 w-4 mr-2" /> 상품 등록
+            </Button>
+          </Link>
+        </div>
       </div>
       <div className="bg-white rounded-lg border">
         <table className="w-full">

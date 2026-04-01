@@ -32,7 +32,8 @@
       "WebFetch(domain:www.icecubedigital.com)",
       "WebFetch(domain:gempages.net)",
       "WebFetch(domain:breakingac.com)",
-      "WebFetch(domain:www.digitalsilk.com)"
+      "WebFetch(domain:www.digitalsilk.com)",
+      "Bash(ls /c/code/likelihood/src/app/admin/products/[id]/edit/edit-form.tsx)"
     ]
   }
 }

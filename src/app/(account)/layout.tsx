@@ -11,6 +11,7 @@ const ACCOUNT_NAV = [
   { href: "/wishlist", label: "위시리스트" },
   { href: "/points", label: "포인트" },
   { href: "/reviews", label: "내 리뷰" },
+  { href: "/custom-orders", label: "제작의뢰" },
   { href: "/settings", label: "회원정보" },
 ];
 
