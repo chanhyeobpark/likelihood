@@ -1,18 +1,16 @@
-function requireEnv(key: string): string {
+function getEnv(key: string, required: boolean = true): string {
   const value = process.env[key];
-  if (!value) {
-    throw new Error(`Missing required environment variable: ${key}`);
+  if (!value && required) {
+    console.error(`⚠️ Missing environment variable: ${key}`);
+    return '';
   }
-  return value;
+  return value || '';
 }
 
-// Validated at import time on the server
-export const env = {
-  SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
-  SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
-  TOSS_SECRET_KEY: process.env.TOSS_SECRET_KEY || '',
-  STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY || '',
-  STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET || '',
-  SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
-} as const;
+// These are validated and used across the app
+export const SUPABASE_URL = getEnv('NEXT_PUBLIC_SUPABASE_URL');
+export const SUPABASE_ANON_KEY = getEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY');
+export const SUPABASE_SERVICE_ROLE_KEY = getEnv('SUPABASE_SERVICE_ROLE_KEY', false);
+export const TOSS_SECRET_KEY = getEnv('TOSS_SECRET_KEY', false);
+export const STRIPE_SECRET_KEY = getEnv('STRIPE_SECRET_KEY', false);
+export const SITE_URL = getEnv('NEXT_PUBLIC_SITE_URL', false) || 'http://localhost:3000';

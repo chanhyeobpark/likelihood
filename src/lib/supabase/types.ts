@@ -778,6 +778,10 @@ export type Database = {
         Args: { p_coupon_id: string }
         Returns: undefined
       }
+      decrement_coupon_usage: {
+        Args: { p_coupon_id: string }
+        Returns: undefined
+      }
       cleanup_pending_orders: {
         Args: Record<string, never>
         Returns: number

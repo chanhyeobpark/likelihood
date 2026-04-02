@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
 
     const { data: order } = await admin
       .from("orders")
-      .select("status")
+      .select("status, coupon_id")
       .eq("id", orderId)
       .single();
 
@@ -72,6 +72,12 @@ export async function POST(request: NextRequest) {
           p_quantity: item.quantity,
         });
       }
+    }
+
+    // Restore coupon usage
+    if (order.coupon_id) {
+      await admin.from("coupon_usages").delete().eq("order_id", orderId);
+      await admin.rpc("decrement_coupon_usage", { p_coupon_id: order.coupon_id });
     }
 
     await admin

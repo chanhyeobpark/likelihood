@@ -31,7 +31,7 @@ export default async function ProductsPage({ searchParams }: Props) {
       *,
       images:product_images(url, is_primary),
       variants:product_variants(stock_quantity)
-    `)
+    `, { count: "exact" })
     .eq("is_active", true);
 
   if (params.category) {
@@ -64,7 +64,7 @@ export default async function ProductsPage({ searchParams }: Props) {
   const from = (page - 1) * perPage;
   query = query.range(from, from + perPage - 1);
 
-  const { data: products, error } = await query;
+  const { data: products, count: totalCount } = await query;
 
   return (
     <div className="container-wide py-12">
@@ -74,10 +74,33 @@ export default async function ProductsPage({ searchParams }: Props) {
         <p className="text-sm text-gray-400">All Products</p>
       </div>
 
+      {/* Filters */}
+      <div className="flex flex-wrap gap-3 mb-6">
+        <Link
+          href={`/products?sort=${sort}`}
+          className={`px-3 py-1.5 text-xs border rounded-full ${!params.gender ? "bg-black text-white border-black" : "hover:bg-gray-50"}`}
+        >
+          전체
+        </Link>
+        {[
+          { value: "F", label: "여성" },
+          { value: "M", label: "남성" },
+          { value: "U", label: "유니섹스" },
+        ].map((g) => (
+          <Link
+            key={g.value}
+            href={`/products?gender=${g.value}&sort=${sort}${params.category ? `&category=${params.category}` : ""}`}
+            className={`px-3 py-1.5 text-xs border rounded-full ${params.gender === g.value ? "bg-black text-white border-black" : "hover:bg-gray-50"}`}
+          >
+            {g.label}
+          </Link>
+        ))}
+      </div>
+
       {/* Sort */}
       <div className="flex items-center justify-between mb-8">
         <p className="text-xs text-gray-400">
-          {products?.length || 0}개의 상품
+          {totalCount || products?.length || 0}개의 상품
         </p>
         <div className="flex gap-4">
           {SORT_OPTIONS.map((opt) => (
@@ -97,23 +120,18 @@ export default async function ProductsPage({ searchParams }: Props) {
       {/* Grid */}
       <ProductGrid products={products || []} />
 
-      {/* Pagination placeholder */}
-      {(products?.length || 0) >= perPage && (
-        <div className="flex justify-center gap-2 mt-12">
+      {/* Pagination */}
+      {totalCount && totalCount > perPage && (
+        <div className="flex justify-center items-center gap-2 mt-12">
           {page > 1 && (
-            <Link
-              href={`/products?page=${page - 1}&sort=${sort}`}
-              className="px-4 py-2 border text-sm hover:bg-gray-50"
-            >
-              이전
-            </Link>
+            <Link href={`/products?page=${page - 1}&sort=${sort}${params.gender ? `&gender=${params.gender}` : ""}${params.category ? `&category=${params.category}` : ""}`}
+              className="px-4 py-2 border text-sm hover:bg-gray-50">이전</Link>
           )}
-          <Link
-            href={`/products?page=${page + 1}&sort=${sort}`}
-            className="px-4 py-2 border text-sm hover:bg-gray-50"
-          >
-            다음
-          </Link>
+          <span className="text-sm text-gray-400 px-4">{page} / {Math.ceil(totalCount / perPage)}</span>
+          {page < Math.ceil(totalCount / perPage) && (
+            <Link href={`/products?page=${page + 1}&sort=${sort}${params.gender ? `&gender=${params.gender}` : ""}${params.category ? `&category=${params.category}` : ""}`}
+              className="px-4 py-2 border text-sm hover:bg-gray-50">다음</Link>
+          )}
         </div>
       )}
     </div>

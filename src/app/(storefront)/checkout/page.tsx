@@ -117,6 +117,10 @@ export default function CheckoutPage() {
       toast.error("올바른 전화번호를 입력해주세요");
       return;
     }
+    if (!form.email || !form.email.includes("@")) {
+      toast.error("올바른 이메일 주소를 입력해주세요");
+      return;
+    }
     if (!agreedToTerms) {
       toast.error("주문 약관에 동의해주세요");
       return;
@@ -206,7 +210,7 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <Label className="text-xs">이메일</Label>
-                    <Input type="email" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} className="mt-1 rounded-none h-11" />
+                    <Input type="email" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} required className="mt-1 rounded-none h-11" placeholder="주문 확인 메일 발송용" />
                   </div>
                   <div>
                     <Label className="text-xs">주소</Label>

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,6 +17,13 @@ export async function POST(request: NextRequest) {
 
     if (!order) {
       return NextResponse.json({ error: "주문을 찾을 수 없습니다" }, { status: 404 });
+    }
+
+    // Verify requester owns this order
+    const supabaseAuth = await createClient();
+    const { data: { user } } = await supabaseAuth.auth.getUser();
+    if (order.user_id && (!user || order.user_id !== user.id)) {
+      return NextResponse.json({ error: "권한이 없습니다" }, { status: 403 });
     }
 
     // Check order status before confirming payment
@@ -54,6 +62,13 @@ export async function POST(request: NextRequest) {
           });
         }
       }
+
+      // Restore coupon usage
+      if (order.coupon_id) {
+        await admin.from("coupon_usages").delete().eq("order_id", order.id);
+        await admin.rpc("decrement_coupon_usage", { p_coupon_id: order.coupon_id });
+      }
+
       await admin.from("orders").update({ status: "CANCELLED" }).eq("id", order.id);
       return NextResponse.json({ error: tossData.message || "결제 확인 실패" }, { status: 400 });
     }

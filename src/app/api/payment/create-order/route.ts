@@ -203,6 +203,11 @@ export async function POST(request: NextRequest) {
             p_quantity: prev.quantity,
           });
         }
+        // Restore coupon usage
+        if (couponId) {
+          await admin.from("coupon_usages").delete().eq("order_id", order.id);
+          await admin.rpc("decrement_coupon_usage", { p_coupon_id: couponId });
+        }
         await admin.from("orders").update({ status: "CANCELLED" }).eq("id", order.id);
         return NextResponse.json(
           { error: "재고가 부족합니다. 다시 시도해주세요." },

@@ -110,7 +110,6 @@ export default async function AdminProductsPage({ searchParams }: Props) {
         <table className="w-full">
           <thead>
             <tr className="border-b text-xs text-gray-500 uppercase tracking-wider">
-              <th className="text-left p-4 w-12"><input type="checkbox" className="rounded" /></th>
               <th className="text-left p-4">상품</th>
               <th className="text-left p-4">카테고리</th>
               <th className="text-right p-4">가격</th>
@@ -125,7 +124,6 @@ export default async function AdminProductsPage({ searchParams }: Props) {
               const primaryImage = product.images?.find((img: any) => img.is_primary) || product.images?.[0];
               return (
                 <tr key={product.id} className="border-b hover:bg-gray-50">
-                  <td className="p-4"><input type="checkbox" className="rounded" /></td>
                   <td className="p-4">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-12 bg-gray-100 flex-shrink-0 rounded overflow-hidden">

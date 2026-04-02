@@ -5,6 +5,8 @@ import { ProductGallery } from "@/components/product/product-gallery";
 import { ProductDetailClient } from "./product-detail-client";
 import { Separator } from "@/components/ui/separator";
 import { formatPrice } from "@/lib/format";
+import { ProductReviews } from "@/components/product/product-reviews";
+import { SizeGuide } from "@/components/product/size-guide";
 import type { Metadata } from "next";
 
 interface Props {
@@ -91,6 +93,10 @@ export default async function ProductDetailPage({ params }: Props) {
             )}
           </div>
 
+          <div className="flex justify-end">
+            <SizeGuide categorySlug={(product.category as any)?.slug} />
+          </div>
+
           <Separator />
 
           {/* Client-side variant selector + add to cart */}
@@ -140,6 +146,12 @@ export default async function ProductDetailPage({ params }: Props) {
           )}
         </div>
       </div>
+
+      {/* Reviews Section */}
+      <section className="container-wide py-16 border-t mt-16">
+        <h2 className="text-xs font-medium tracking-[0.3em] uppercase mb-8">Reviews</h2>
+        <ProductReviews productId={product.id} />
+      </section>
     </div>
   );
 }
