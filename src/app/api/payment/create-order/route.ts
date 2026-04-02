@@ -100,6 +100,9 @@ export async function POST(request: NextRequest) {
       }
 
       // Check per_user_limit
+      if (coupon.per_user_limit && coupon.per_user_limit > 0 && !user) {
+        return NextResponse.json({ error: "쿠폰 사용은 로그인이 필요합니다" }, { status: 400 });
+      }
       if (user && coupon.per_user_limit > 0) {
         const { count: userUsageCount } = await admin
           .from("coupon_usages")
@@ -114,8 +117,22 @@ export async function POST(request: NextRequest) {
 
       // Check category restriction
       if (coupon.applicable_category_id) {
-        // verify items are in the applicable category
-        // (simplified: just check if any item matches)
+        // Check that all ordered items belong to the applicable category
+        let allItemsMatch = true;
+        for (const item of items) {
+          const { data: variant } = await admin
+            .from("product_variants")
+            .select("product:products(category_id)")
+            .eq("id", item.variantId)
+            .single();
+          if (!variant || (variant.product as any)?.category_id !== coupon.applicable_category_id) {
+            allItemsMatch = false;
+            break;
+          }
+        }
+        if (!allItemsMatch) {
+          return NextResponse.json({ error: "이 쿠폰은 지정된 카테고리 상품에만 사용할 수 있습니다" }, { status: 400 });
+        }
       }
 
       if (subtotal >= (coupon.min_order_amount || 0)) {
@@ -177,14 +194,17 @@ export async function POST(request: NextRequest) {
     );
 
     // Record coupon usage
-    if (couponId && user) {
-      await admin.from("coupon_usages").insert({
-        coupon_id: couponId,
-        user_id: user.id,
-        order_id: order.id,
-      });
-      // Atomic increment usage count
+    if (couponId) {
+      // Always increment usage count
       await admin.rpc("increment_coupon_usage", { p_coupon_id: couponId });
+      // Record per-user usage only for logged-in users
+      if (user) {
+        await admin.from("coupon_usages").insert({
+          coupon_id: couponId,
+          user_id: user.id,
+          order_id: order.id,
+        });
+      }
     }
 
     // Atomic stock decrement (prevents overselling via race condition)
