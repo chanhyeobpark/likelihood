@@ -42,7 +42,8 @@
       "Bash(node -e \":*)",
       "Bash(git push:*)",
       "Bash(ls /c/code/likelihood/src/app/\\\\\\(account\\\\\\)/custom-orders/new/page.tsx)",
-      "Bash(ls /c/code/likelihood/src/app/\\\\\\(account\\\\\\)/reviews/page.tsx)"
+      "Bash(ls /c/code/likelihood/src/app/\\\\\\(account\\\\\\)/reviews/page.tsx)",
+      "Bash(gh api:*)"
     ]
   }
 }

@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Search, ShoppingBag, User, Menu, Heart, Settings } from "lucide-react";
+import { Search, ShoppingBag, User, Menu, Heart, Settings, LogOut, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useUIStore } from "@/stores/ui-store";
 import { useCartStore } from "@/stores/cart-store";
 import { createClient } from "@/lib/supabase/client";
@@ -15,6 +16,7 @@ export function Header() {
   const [itemCount, setItemCount] = useState(0);
   const [scrolled, setScrolled] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const { scrollY } = useScroll();
 
@@ -36,6 +38,7 @@ export function Header() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
+        setIsLoggedIn(true);
         const { data: profile } = await supabase
           .from("profiles")
           .select("role")
@@ -105,18 +108,53 @@ export function Header() {
                   <Heart className="h-5 w-5" />
                 </Button>
               </Link>
-              {isAdmin && (
-                <Link href="/admin">
-                  <Button variant="ghost" size="icon" className="hover:bg-transparent hover:opacity-60" title="관리자">
-                    <Settings className="h-5 w-5" />
-                  </Button>
-                </Link>
-              )}
-              <Link href="/mypage">
-                <Button variant="ghost" size="icon" className="hover:bg-transparent hover:opacity-60">
-                  <User className="h-5 w-5" />
-                </Button>
-              </Link>
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <span className="inline-flex items-center justify-center h-9 w-9 hover:opacity-60 transition-opacity">
+                    <User className="h-5 w-5" />
+                  </span>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-40">
+                  {isLoggedIn ? (
+                    <>
+                      <DropdownMenuItem onClick={() => window.location.href = "/mypage"} className="cursor-pointer">
+                        마이페이지
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => window.location.href = "/orders"} className="cursor-pointer">
+                        주문내역
+                      </DropdownMenuItem>
+                      {isAdmin && (
+                        <>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem onClick={() => window.location.href = "/admin"} className="cursor-pointer">
+                            <Settings className="h-3.5 w-3.5 mr-2" />관리자
+                          </DropdownMenuItem>
+                        </>
+                      )}
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        className="cursor-pointer text-red-500"
+                        onClick={async () => {
+                          const supabase = createClient();
+                          await supabase.auth.signOut();
+                          window.location.href = "/";
+                        }}
+                      >
+                        <LogOut className="h-3.5 w-3.5 mr-2" />로그아웃
+                      </DropdownMenuItem>
+                    </>
+                  ) : (
+                    <>
+                      <DropdownMenuItem onClick={() => window.location.href = "/login"} className="cursor-pointer">
+                        <LogIn className="h-3.5 w-3.5 mr-2" />로그인
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => window.location.href = "/register"} className="cursor-pointer">
+                        회원가입
+                      </DropdownMenuItem>
+                    </>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
               <Button variant="ghost" size="icon" className="hover:bg-transparent hover:opacity-60 relative" onClick={() => setCartOpen(true)}>
                 <ShoppingBag className="h-5 w-5" />
                 {itemCount > 0 && (
