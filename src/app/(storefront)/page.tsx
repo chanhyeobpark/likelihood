@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { AnimateOnScroll, StaggerContainer, StaggerItem } from "@/components/shared/animate-on-scroll";
 import { Marquee } from "@/components/shared/marquee";
@@ -8,6 +9,28 @@ import { ProductCard } from "@/components/product/product-card";
 
 export default async function HomePage() {
   const supabase = await createClient();
+
+  // Get category images (first product image from each category)
+  const categorySlugs = ["outer", "tops", "bottoms", "dresses", "accessories", "bags"];
+  const categoryImages: Record<string, string> = {};
+  for (const slug of categorySlugs) {
+    const { data: cat } = await supabase.from("categories").select("id").eq("slug", slug).single();
+    if (cat) {
+      // Also check subcategories
+      const { data: subCats } = await supabase.from("categories").select("id").eq("parent_id", cat.id);
+      const catIds = [cat.id, ...(subCats?.map((c) => c.id) || [])];
+      const { data: product } = await supabase
+        .from("products")
+        .select("images:product_images(url, is_primary)")
+        .in("category_id", catIds)
+        .eq("is_active", true)
+        .limit(1)
+        .single();
+      const img = (product?.images as any[])?.find((i: any) => i.is_primary) || (product?.images as any[])?.[0];
+      if (img?.url) categoryImages[slug] = img.url;
+    }
+  }
+
   const { data: featuredProducts } = await supabase
     .from("products")
     .select("slug, name_ko, name_en, base_price, compare_at_price, is_new, images:product_images(url, is_primary), variants:product_variants(stock_quantity)")
@@ -75,7 +98,17 @@ export default async function HomePage() {
                   <h3 className="text-white text-sm tracking-wider">{category.name}</h3>
                   <p className="text-white/60 text-xs mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500">{category.en}</p>
                 </div>
-                <div className="w-full h-full bg-gradient-to-b from-gray-200 to-gray-400 group-hover:scale-110 transition-transform duration-700" />
+                {categoryImages[category.slug] ? (
+                  <Image
+                    src={categoryImages[category.slug]}
+                    alt={category.name}
+                    fill
+                    sizes="(max-width: 768px) 50vw, 33vw"
+                    className="object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-b from-gray-200 to-gray-400 group-hover:scale-110 transition-transform duration-700" />
+                )}
               </Link>
             </StaggerItem>
           ))}

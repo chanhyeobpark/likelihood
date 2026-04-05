@@ -43,7 +43,11 @@
       "Bash(git push:*)",
       "Bash(ls /c/code/likelihood/src/app/\\\\\\(account\\\\\\)/custom-orders/new/page.tsx)",
       "Bash(ls /c/code/likelihood/src/app/\\\\\\(account\\\\\\)/reviews/page.tsx)",
-      "Bash(gh api:*)"
+      "Bash(gh api:*)",
+      "Bash(node /c/code/likelihood/scripts/seed-products.js)",
+      "Bash(node /c/code/likelihood/scripts/upload-images.js)",
+      "Bash(node /c/code/likelihood/scripts/upload-extra-images.js)",
+      "Bash(node /c/code/likelihood/scripts/seed-all-products.js)"
     ]
   }
 }
