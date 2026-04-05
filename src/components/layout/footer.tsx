@@ -21,7 +21,6 @@ export function Footer() {
             <h4 className="text-xs font-medium tracking-wider uppercase mb-4">Shop</h4>
             <ul className="space-y-3 text-sm text-gray-500">
               <li><Link href="/products" className="hover:text-black transition-colors">전체상품</Link></li>
-              <li><Link href="/categories/outer" className="hover:text-black transition-colors">아우터</Link></li>
               <li><Link href="/categories/tops" className="hover:text-black transition-colors">상의</Link></li>
               <li><Link href="/categories/bottoms" className="hover:text-black transition-colors">하의</Link></li>
               <li><Link href="/categories/accessories" className="hover:text-black transition-colors">액세서리</Link></li>

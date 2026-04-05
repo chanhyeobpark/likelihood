@@ -47,7 +47,8 @@
       "Bash(node /c/code/likelihood/scripts/seed-products.js)",
       "Bash(node /c/code/likelihood/scripts/upload-images.js)",
       "Bash(node /c/code/likelihood/scripts/upload-extra-images.js)",
-      "Bash(node /c/code/likelihood/scripts/seed-all-products.js)"
+      "Bash(node /c/code/likelihood/scripts/seed-all-products.js)",
+      "Bash(node /c/code/likelihood/scripts/upload-category-defaults.js)"
     ]
   }
 }

@@ -11,7 +11,7 @@ export default async function HomePage() {
   const supabase = await createClient();
 
   // Get category images (first product image from each category)
-  const categorySlugs = ["outer", "tops", "bottoms", "dresses", "accessories", "bags"];
+  const categorySlugs = ["tops", "bottoms", "accessories"];
   const categoryImages: Record<string, string> = {};
   for (const slug of categorySlugs) {
     const { data: cat } = await supabase.from("categories").select("id").eq("slug", slug).single();
@@ -81,12 +81,9 @@ export default async function HomePage() {
         </AnimateOnScroll>
         <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
           {[
-            { name: "아우터", en: "Outer", slug: "outer" },
             { name: "상의", en: "Tops", slug: "tops" },
             { name: "하의", en: "Bottoms", slug: "bottoms" },
-            { name: "원피스", en: "Dresses", slug: "dresses" },
             { name: "액세서리", en: "Accessories", slug: "accessories" },
-            { name: "가방", en: "Bags", slug: "bags" },
           ].map((category) => (
             <StaggerItem key={category.slug}>
               <Link

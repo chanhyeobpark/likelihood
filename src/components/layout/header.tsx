@@ -80,10 +80,8 @@ export function Header() {
             <nav className="hidden lg:flex items-center gap-8 text-sm tracking-wide">
               {[
                 { href: "/products", label: "전체상품" },
-                { href: "/categories/outer", label: "아우터" },
                 { href: "/categories/tops", label: "상의" },
                 { href: "/categories/bottoms", label: "하의" },
-                { href: "/categories/dresses", label: "원피스" },
                 { href: "/categories/accessories", label: "액세서리" },
                 { href: "/custom-order", label: "제작의뢰" },
               ].map((item) => (

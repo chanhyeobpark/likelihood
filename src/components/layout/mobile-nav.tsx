@@ -9,12 +9,10 @@ import { Separator } from "@/components/ui/separator";
 
 const NAV_ITEMS = [
   { href: "/products", label: "전체상품" },
-  { href: "/categories/outer", label: "아우터" },
   { href: "/categories/tops", label: "상의" },
   { href: "/categories/bottoms", label: "하의" },
-  { href: "/categories/dresses", label: "원피스" },
   { href: "/categories/accessories", label: "액세서리" },
-  { href: "/categories/bags", label: "가방" },
+  { href: "/custom-order", label: "제작의뢰" },
 ];
 
 export function MobileNav() {
