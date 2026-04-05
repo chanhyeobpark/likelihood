@@ -40,7 +40,8 @@
       "Bash(curl -s -X PATCH \"https://nvobmxhtjcekgajmmusp.supabase.co/rest/v1/profiles?id=eq.d8cfd7c4-3bc0-4927-901f-919afef0f405\" -H \"apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im52b2JteGh0amNla2dham1tdXNwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NTA4MzMzMywiZXhwIjoyMDkwNjU5MzMzfQ.vO2FLS5KzI7goLHf2h2jMaBePPyV2hDMzQkAPElJMbw\" -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im52b2JteGh0amNla2dham1tdXNwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NTA4MzMzMywiZXhwIjoyMDkwNjU5MzMzfQ.vO2FLS5KzI7goLHf2h2jMaBePPyV2hDMzQkAPElJMbw\" -H \"Content-Type: application/json\" -H \"Prefer: return=minimal\" -d '{\"\"role\"\": \"\"ADMIN\"\", \"\"full_name\"\": \"\"박찬우\"\"}')",
       "Bash(curl -s -X PATCH \"https://nvobmxhtjcekgajmmusp.supabase.co/rest/v1/profiles?id=eq.d8cfd7c4-3bc0-4927-901f-919afef0f405\" -H \"apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im52b2JteGh0amNla2dham1tdXNwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NTA4MzMzMywiZXhwIjoyMDkwNjU5MzMzfQ.vO2FLS5KzI7goLHf2h2jMaBePPyV2hDMzQkAPElJMbw\" -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im52b2JteGh0amNla2dham1tdXNwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NTA4MzMzMywiZXhwIjoyMDkwNjU5MzMzfQ.vO2FLS5KzI7goLHf2h2jMaBePPyV2hDMzQkAPElJMbw\" -H \"Content-Type: application/json\" -d \"{\"\"role\"\": \"\"ADMIN\"\", \"\"full_name\"\": \"\"박찬우\"\"}\")",
       "Bash(node -e \":*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(ls /c/code/likelihood/src/app/\\\\\\(account\\\\\\)/custom-orders/new/page.tsx)"
     ]
   }
 }

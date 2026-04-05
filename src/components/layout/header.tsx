@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Search, ShoppingBag, User, Menu, Heart } from "lucide-react";
+import { Search, ShoppingBag, User, Menu, Heart, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/stores/ui-store";
 import { useCartStore } from "@/stores/cart-store";
+import { createClient } from "@/lib/supabase/client";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 export function Header() {
@@ -13,6 +14,7 @@ export function Header() {
   const getItemCount = useCartStore((s) => s.getItemCount);
   const [itemCount, setItemCount] = useState(0);
   const [scrolled, setScrolled] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const { scrollY } = useScroll();
 
@@ -27,6 +29,22 @@ export function Header() {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", user.id)
+          .single();
+        setIsAdmin(profile?.role === "ADMIN");
+      }
+    };
+    checkAdmin();
   }, []);
 
   return (
@@ -87,6 +105,13 @@ export function Header() {
                   <Heart className="h-5 w-5" />
                 </Button>
               </Link>
+              {isAdmin && (
+                <Link href="/admin">
+                  <Button variant="ghost" size="icon" className="hover:bg-transparent hover:opacity-60" title="관리자">
+                    <Settings className="h-5 w-5" />
+                  </Button>
+                </Link>
+              )}
               <Link href="/mypage">
                 <Button variant="ghost" size="icon" className="hover:bg-transparent hover:opacity-60">
                   <User className="h-5 w-5" />
