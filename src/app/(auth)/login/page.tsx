@@ -31,17 +31,22 @@ function LoginForm() {
     e.preventDefault();
     setLoading(true);
 
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
 
-    if (error) {
-      toast.error("로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.");
+      if (error) {
+        toast.error("로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.");
+        setLoading(false);
+        return;
+      }
+
+      toast.success("로그인 성공!");
+      window.location.href = redirect;
+    } catch (err) {
+      toast.error("오류가 발생했습니다. 다시 시도해주세요.");
       setLoading(false);
-      return;
     }
-
-    router.push(redirect);
-    router.refresh();
   };
 
   const handleSocialLogin = async (provider: "kakao" | "google" | "naver") => {
