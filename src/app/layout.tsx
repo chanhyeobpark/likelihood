@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -34,6 +35,7 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased min-h-screen bg-white text-foreground">
+        <NextTopLoader color="#000000" height={2} showSpinner={false} />
         <TooltipProvider>
           {children}
           <Toaster />
