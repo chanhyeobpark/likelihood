@@ -7,6 +7,8 @@ import { HeroSection } from "./hero-section";
 import { createClient } from "@/lib/supabase/server";
 import { ProductCard } from "@/components/product/product-card";
 
+export const revalidate = 120; // Homepage refreshes every 2 minutes
+
 export default async function HomePage() {
   const supabase = await createClient();
 

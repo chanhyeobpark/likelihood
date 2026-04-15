@@ -9,6 +9,8 @@ import { ProductReviews } from "@/components/product/product-reviews";
 import { SizeGuide } from "@/components/product/size-guide";
 import type { Metadata } from "next";
 
+export const revalidate = 60; // Revalidate every 60 seconds
+
 interface Props {
   params: Promise<{ slug: string }>;
 }

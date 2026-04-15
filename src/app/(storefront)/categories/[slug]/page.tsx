@@ -5,6 +5,8 @@ import { SORT_OPTIONS } from "@/lib/constants";
 import Link from "next/link";
 import type { Metadata } from "next";
 
+export const revalidate = 60; // Revalidate every 60 seconds
+
 interface Props {
   params: Promise<{ slug: string }>;
   searchParams: Promise<{ sort?: string; page?: string }>;

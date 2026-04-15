@@ -8,6 +8,8 @@ export const metadata = {
   description: "likelihood 전체 상품을 확인하세요.",
 };
 
+export const revalidate = 60; // Revalidate every 60 seconds
+
 interface Props {
   searchParams: Promise<{
     category?: string;
