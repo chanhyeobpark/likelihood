@@ -12,34 +12,36 @@ export const revalidate = 120; // Homepage refreshes every 2 minutes
 export default async function HomePage() {
   const supabase = await createClient();
 
-  // Get category images (first product image from each category)
+  // Get all data in parallel (single batch instead of 6+ sequential queries)
+  const [categoriesResult, featuredResult] = await Promise.all([
+    supabase.from("categories").select("id, slug, parent_id").eq("is_active", true),
+    supabase
+      .from("products")
+      .select("slug, name_ko, name_en, base_price, compare_at_price, is_new, category_id, images:product_images(url, is_primary), variants:product_variants(stock_quantity)")
+      .eq("is_active", true)
+      .order("is_featured", { ascending: false })
+      .order("created_at", { ascending: false })
+      .limit(20),
+  ]);
+
+  const allCategories = categoriesResult.data || [];
+  const allProducts = featuredResult.data || [];
+
+  // Build category images from already-fetched products
   const categorySlugs = ["tops", "bottoms", "accessories"];
   const categoryImages: Record<string, string> = {};
   for (const slug of categorySlugs) {
-    const { data: cat } = await supabase.from("categories").select("id").eq("slug", slug).single();
+    const cat = allCategories.find((c) => c.slug === slug);
     if (cat) {
-      // Also check subcategories
-      const { data: subCats } = await supabase.from("categories").select("id").eq("parent_id", cat.id);
-      const catIds = [cat.id, ...(subCats?.map((c) => c.id) || [])];
-      const { data: product } = await supabase
-        .from("products")
-        .select("images:product_images(url, is_primary)")
-        .in("category_id", catIds)
-        .eq("is_active", true)
-        .limit(1)
-        .single();
+      const catIds = [cat.id, ...allCategories.filter((c) => c.parent_id === cat.id).map((c) => c.id)];
+      const product = allProducts.find((p) => catIds.includes(p.category_id));
       const img = (product?.images as any[])?.find((i: any) => i.is_primary) || (product?.images as any[])?.[0];
       if (img?.url) categoryImages[slug] = img.url;
     }
   }
 
-  const { data: featuredProducts } = await supabase
-    .from("products")
-    .select("slug, name_ko, name_en, base_price, compare_at_price, is_new, images:product_images(url, is_primary), variants:product_variants(stock_quantity)")
-    .eq("is_active", true)
-    .order("is_featured", { ascending: false })
-    .order("created_at", { ascending: false })
-    .limit(8);
+  const featuredProducts = allProducts.slice(0, 8);
+
   return (
     <div>
       {/* Hero */}
